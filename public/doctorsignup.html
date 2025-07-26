@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EHR System - Doctor Signup</title>
+  <link rel="stylesheet" href="landingcss.css" />
+</head>
+<body>
+  <section class="login-background doctor-bg">
+    <div class="login-container">
+      <h2>Doctor Signup</h2>
+
+      <form id="doctorSignupForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" placeholder="Enter your full name" required />
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required />
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" placeholder="Enter password" required />
+
+        <label for="speciality">Speciality:</label>
+        <input type="text" id="speciality" name="speciality" placeholder="e.g. Cardiology" />
+
+        <label for="license">License Number:</label>
+        <input type="text" id="license" name="License_Number" placeholder="License number" />
+
+        <!-- Hidden field for role -->
+        <input type="hidden" name="role" value="doctor" />
+
+        <button type="submit">Sign Up</button>
+      </form>
+
+      <p>Already registered? <a href="doctorlogin.html">Login here</a></p>
+    </div>
+  </section>
+
+  <script>
+    const form = document.getElementById('doctorSignupForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = {
+        name: form.name.value,
+        email: form.email.value,
+        password: form.password.value,
+        role: form.role.value,
+        speciality: form.speciality.value,
+        License_Number: form.License_Number.value
+      };
+
+      try {
+        const response = await fetch('/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (response.ok) {
+          alert('Doctor signed up successfully!');
+          window.location.href = 'doctorlogin.html';
+        } else {
+          const errorText = await response.text();
+          alert('Signup failed: ' + errorText);
+        }
+      } catch (error) {
+        console.error('Signup error:', error);
+        alert('Error connecting to server');
+      }
+    });
+  </script>
+</body>
+</html>

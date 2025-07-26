@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EHR System - Doctor Login</title>
+  <link rel="stylesheet" href="landingcss.css" />
+</head>
+<body>
+  <section class="login-background doctor-bg">
+    <div class="login-container">
+      <h2>Doctor Login</h2>
+
+      <form id="doctorLoginForm">
+        <label for="doctorEmail">Email:</label>
+        <input type="email" id="doctorEmail" name="email" placeholder="Enter your email" required />
+
+        <label for="doctorPassword">Password:</label>
+        <input type="password" id="doctorPassword" name="password" placeholder="Enter your password" required />
+
+        <button type="submit">Login</button>
+      </form>
+
+      <p>Not registered? <a href="doctorsignup.html">Sign up as a Doctor</a></p>
+    </div>
+  </section>
+
+  <script>
+    const loginForm = document.getElementById('doctorLoginForm');
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('doctorEmail').value;
+      const password = document.getElementById('doctorPassword').value;
+
+      const loginData = {
+        email,
+        password,
+        role: 'doctor'
+      };
+
+      try {
+        const response = await fetch('/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(loginData)
+        });
+
+        if (response.redirected) {
+          window.location.href = response.url;
+        } else {
+          const msg = await response.text();
+          alert("Login failed: " + msg);
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        alert('Error connecting to server');
+      }
+    });
+  </script>
+</body>
+</html>
